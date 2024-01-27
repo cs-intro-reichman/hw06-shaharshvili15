@@ -11,16 +11,16 @@ public class Runigram {
 		
 		// Tests the reading and printing of an image:	
 		Color[][] tinypic = read("tinypic.ppm");
-		print(tinypic);
+		print(grayScaled(tinypic));
 
 		// Creates an image which will be the result of various 
 		// image processing operations:
-		Color[][] imageOut;
+		//Color[][] imageOut;
 
 		// Tests the horizontal flipping of an image:
-		imageOut = flippedHorizontally(tinypic);
-		System.out.println();
-		print(imageOut);
+		//imageOut = flippedVertically(tinypic);
+		//System.out.println();
+		//print(imageOut);
 		
 		//// Write here whatever code you need in order to test your work.
 		//// You can reuse / overide the contents of the imageOut array.
@@ -37,12 +37,23 @@ public class Runigram {
 		in.readInt();
 		// Creates the image array
 		Color[][] image = new Color[numRows][numCols];
+		for(int i = 0; i<numRows ;i++){
+			int red = 0;
+			int green =0;
+			int blue = 0;
+			for (int j= 0 ; j<numCols; j++){
+				red = in.readInt();
+				green = in.readInt();
+				blue = in.readInt();
+				image[i][j] = new Color(red,green,blue);
+			}
+		}
 		// Reads the RGB values from the file, into the image array. 
 		// For each pixel (i,j), reads 3 values from the file,
 		// creates from the 3 colors a new Color object, and 
 		// makes pixel (i,j) refer to that object.
 		//// Replace the following statement with your code.
-		return null;
+		return image;
 	}
 
     // Prints the RGB values of a given color.
@@ -60,39 +71,62 @@ public class Runigram {
 	// For example, to check that some image processing function works correctly,
 	// we can apply the function and then use this function to print the resulting image.
 	private static void print(Color[][] image) {
-		//// Replace this comment with your code
+		for(int i = 0; i<image.length;i++){
+			for(int j = 0; j<image[0].length;j++){
+				print(image[i][j]);
+			}
+		}
 	}
 	
 	/**
 	 * Returns an image which is the horizontally flipped version of the given image. 
 	 */
 	public static Color[][] flippedHorizontally(Color[][] image) {
-		//// Replace the following statement with your code
-		return null;
+		Color[][] temp = new Color[image.length][image[0].length];
+		for(int i = 0; i<image.length;i++){
+			int count =0;
+			for(int j = image[0].length-1; j>=0;j--){
+				temp[i][count] = image[i][j];
+				count++;
+			}
+		}
+		return temp;
 	}
 	
 	/**
 	 * Returns an image which is the vertically flipped version of the given image. 
 	 */
 	public static Color[][] flippedVertically(Color[][] image){
-		//// Replace the following statement with your code
-		return null;
+		Color[][] temp = new Color[image.length][image[0].length];
+		int count =0;
+		for(int i = image.length-1; i>=0;i--){
+			for(int j = 0; j<image[0].length;j++){
+				temp[count][j] = image[i][j];
+			}
+			count++;
+		}
+		return temp;
 	}
 	
 	// Computes the luminance of the RGB values of the given pixel, using the formula 
 	// lum = 0.299 * r + 0.587 * g + 0.114 * b, and returns a Color object consisting
 	// the three values r = lum, g = lum, b = lum.
 	public static Color luminance(Color pixel) {
-		//// Replace the following statement with your code
-		return null;
+		int lum = (int) (0.299 * pixel.getRed() + 0.587 *pixel.getGreen() + 0.114 * pixel.getBlue());
+		return new Color(lum,lum,lum);
 	}
 	
 	/**
 	 * Returns an image which is the grayscaled version of the given image.
 	 */
 	public static Color[][] grayScaled(Color[][] image) {
-		//// Replace the following statement with your code
-		return null;
+		Color[][] temp = new Color[image.length][image[0].length];
+		for(int i =0 ;i< image.length;i++){
+			for (int j= 0; j<image[0].length;j++){
+				temp[i][j] = luminance(image[i][j]);
+			}
+		}
+		return temp;
 	}	
 	
 	/**
@@ -100,8 +134,17 @@ public class Runigram {
 	 * The image is scaled (resized) to have the given width and height.
 	 */
 	public static Color[][] scaled(Color[][] image, int width, int height) {
-		//// Replace the following statement with your code
-		return null;
+		Color[][] newImage = new Color[width][height];
+		int srcWidth = image.length;
+		int srcHeight = image[0].length;
+		double widthScale = (double) srcWidth / width;
+		double heightScale = (double) srcHeight / height;
+		for(int i = 0 ; i<newImage.length; i++){
+			for (int j = 0 ; j<newImage[0].length;j++){
+				newImage[i][j] = image[(int)(i * widthScale)][(int)(j * heightScale)];
+			}
+		}
+		return newImage;
 	}
 	
 	/**
